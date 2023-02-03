@@ -7,6 +7,8 @@ import PizzaBlock from "../components/PizzaBlock";
 import axios from "axios";
 import Pagination from "../components/Pagination";
 import {SearchContext} from "../App";
+import {useAppDispatch, useAppSelector} from "../hook/redux";
+import {setCategoryId, setSortType} from "../redux/reducer/filterSlice";
 
 
 interface ISort {
@@ -16,15 +18,14 @@ interface ISort {
 
 
 const Home = () => {
+    const {categoryId, sortType} = useAppSelector(state => state.filter)
+    const dispatch = useAppDispatch()
+
     const [pizzas, setPizzas] = useState([])
     const [loading, setLoading] = useState(true)
     const [currentPage, setCurrentPage] = useState(1)
 
     const {searchValue} = useContext(SearchContext)
-
-    const [categoryId, setCategoryId] = useState(0)
-    const [sortType, setSortType] = useState<ISort>({name: "популярности", sort: "rating"})
-
 
     useEffect(() => {
         const getPizzas = async () => {
@@ -49,12 +50,12 @@ const Home = () => {
 
     const onClickCategory = (id: number) => {
         setCurrentPage(1)
-        setCategoryId(id)
+        dispatch(setCategoryId(id))
     }
 
     const onChangeSort = (sortType: ISort) => {
         setCurrentPage(1)
-        setSortType(sortType)
+        dispatch(setSortType(sortType))
     }
 
     const pizzasList = pizzas
