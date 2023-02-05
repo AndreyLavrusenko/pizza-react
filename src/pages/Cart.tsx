@@ -3,7 +3,6 @@ import EmptyCart from "../components/EmptyCart";
 import React from 'react';
 import {useAppDispatch, useAppSelector} from "../hook/redux";
 import PizzaCart from "../components/PizzaCart";
-import {IPizza} from "../models/IPizza";
 import {clearItem} from "../redux/reducer/cartSlice";
 
 
@@ -15,7 +14,8 @@ const Cart = () => {
         dispatch(clearItem())
     }
 
-    if (!totalCount) {
+
+    if (items.length === 0) {
         return <EmptyCart />
     }
 

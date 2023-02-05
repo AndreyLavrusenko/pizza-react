@@ -6,35 +6,20 @@ import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 
 import './scss/app.scss'
-
-
-interface IContext {
-    searchValue: string,
-    setSearchValue: Dispatch<SetStateAction<string>>
-}
-
-export const SearchContext = createContext<IContext>({
-    setSearchValue: () => {},
-    searchValue: "",
-})
+import Pizza from "./pages/Pizza";
+import Layout from "./layouts/Layout";
 
 
 const App = () => {
-    const [searchValue, setSearchValue] = useState("")
-
     return (
-        <div className="wrapper">
-            <SearchContext.Provider value={{searchValue, setSearchValue}}>
-                <Header />
-                <div className="content">
-                    <Routes>
-                        <Route path={'/'} element={<Home/>}/>
-                        <Route path={'/cart'} element={<Cart/>}/>
-                        <Route path={'*'} element={<NotFound/>}/>
-                    </Routes>
-                </div>
-            </SearchContext.Provider>
-        </div>
+        <Layout>
+            <Routes>
+                <Route path={'/'} element={<Home/>}/>
+                <Route path={'/cart'} element={<Cart/>}/>
+                <Route path={'/pizza/:id'} element={<Pizza/>}/>
+                <Route path={'*'} element={<NotFound/>}/>
+            </Routes>
+        </Layout>
     );
 };
 

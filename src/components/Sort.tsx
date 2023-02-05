@@ -1,9 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {memo, useEffect, useRef, useState} from 'react';
+import {ISort} from "../pages/Home";
 
-interface ISort {
-    name: string,
-    sort: string
-}
 
 interface IProps {
     value: ISort,
@@ -16,7 +13,7 @@ export const category: ISort[] = [
     {name: 'алфавиту', sort: 'title'},
 ]
 
-const Sort = ({value, onChangeSort}: IProps) => {
+const Sort = memo(({value, onChangeSort}: IProps) => {
     const [popup, setPopup] = useState(false)
 
     const sortRef = useRef(null)
@@ -75,6 +72,6 @@ const Sort = ({value, onChangeSort}: IProps) => {
 
         </div>
     );
-};
+});
 
 export default Sort;

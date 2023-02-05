@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import logo from '../assets/img/pizza-logo.svg'
 import {NavLink} from "react-router-dom";
 import Search from "./Search/Search";
@@ -6,7 +6,18 @@ import {useAppSelector} from "../hook/redux";
 
 
 const Header = () => {
-    const {totalCount, totalPrice} = useAppSelector(state => state.cart)
+    const {totalCount, totalPrice, items} = useAppSelector(state => state.cart)
+    const isMounted = useRef(false)
+
+    useEffect(() => {
+        if (isMounted.current) {
+            const json = JSON.stringify(items)
+            localStorage.setItem('cart', json)
+        }
+
+        isMounted.current = true
+
+    }, [items])
 
     return (
         <div className="header">

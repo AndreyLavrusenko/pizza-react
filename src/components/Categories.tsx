@@ -1,12 +1,13 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 interface IProps {
     value: number
     onClickCategory: (id: number) => void
 }
 
-const Categories = ({value, onClickCategory}: IProps) => {
-    const categories = ["Все", "Мясные", "Вегетарианская", "Гриль", "Острые", "Закрытые"]
+const categories = ["Все", "Мясные", "Вегетарианская", "Гриль", "Острые", "Закрытые"]
+
+const Categories = memo(({value, onClickCategory}: IProps) => {
 
     return (
         <div className="categories">
@@ -22,6 +23,6 @@ const Categories = ({value, onClickCategory}: IProps) => {
             </ul>
         </div>
     );
-};
+});
 
 export default Categories;

@@ -1,17 +1,19 @@
-import React, {MutableRefObject, useCallback, useContext, useRef, useState} from 'react';
-import {SearchContext} from "../../App";
+import React, {useCallback, useState} from 'react';
 import debounce from 'lodash.debounce'
+import {setSearchValue} from "../../redux/reducer/filterSlice";
 
 import styles from './search.module.scss'
+import {useAppDispatch} from "../../hook/redux";
 
 
 const Search = () => {
-    const {setSearchValue} = useContext(SearchContext)
     const [value, setValue] = useState('')
-    const inputRef = useRef() as MutableRefObject<HTMLInputElement>
+
+    const dispatch = useAppDispatch()
+
 
     const updateSearchValue = useCallback(debounce((str: string) => {
-        setSearchValue(str)
+        dispatch(setSearchValue(str))
     }, 750), [])
 
     const onChangeInput = (e: any) => {

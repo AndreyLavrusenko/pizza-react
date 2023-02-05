@@ -1,5 +1,8 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice} from '@reduxjs/toolkit'
 import {IPizza} from "../../models/IPizza";
+import {calcTotalPrice} from "../../utils/calcTotalPrice";
+import {calcTotalCount} from "../../utils/calcTotalCount";
+
 
 export interface CounterState {
     totalPrice: number,
@@ -7,10 +10,12 @@ export interface CounterState {
     totalCount: number,
 }
 
+const data = localStorage.getItem('cart')
+
 const initialState: CounterState = {
-    totalPrice: 0,
-    items: [],
-    totalCount: 0
+    totalPrice: data ? calcTotalPrice(JSON.parse(data)) : 0,
+    totalCount: data ? calcTotalCount(JSON.parse(data)) : 0,
+    items: data ? JSON.parse(data) : [],
 }
 
 export const cartSlice = createSlice({
@@ -67,6 +72,7 @@ export const cartSlice = createSlice({
         }
     },
 })
+
 
 export const {addItem, removeItem, clearItem, minusItem} = cartSlice.actions
 

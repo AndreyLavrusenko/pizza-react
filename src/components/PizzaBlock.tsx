@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useAppDispatch, useAppSelector} from "../hook/redux";
 import {addItem} from "../redux/reducer/cartSlice";
+import {NavLink} from "react-router-dom";
 
 
 interface IProps {
@@ -38,14 +39,16 @@ const PizzaBlock = ({title, price, imageUrl, sizes, types, id}: IProps) => {
     }
 
     return (
-        <div className="pizza-block-wrapper">
+        <div  className="pizza-block-wrapper">
             <div className="pizza-block">
-                <img
-                    className="pizza-block__image"
-                    src={imageUrl}
-                    alt="Pizza"
-                />
-                <h4 className="pizza-block__title">{title}</h4>
+                <NavLink to={`pizza/${id}`}>
+                    <img
+                        className="pizza-block__image"
+                        src={imageUrl}
+                        alt="Pizza"
+                    />
+                    <h4 className="pizza-block__title">{title}</h4>
+                </NavLink>
                 <div className="pizza-block__selector">
                     <ul>
                         {types.map((type: number, index: number) => (
@@ -53,7 +56,6 @@ const PizzaBlock = ({title, price, imageUrl, sizes, types, id}: IProps) => {
                                 key={index}
                                 onClick={() => setActiveType(index)}
                                 className={index === activeType ? 'active' : ""}
-                                // @ts-ignore
                             >{pizzaType[type]}
                             </li>
                         ))}
