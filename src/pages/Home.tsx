@@ -1,14 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import Categories from "../components/Categories";
-import Sort from "../components/Sort";
+import Sort, {category} from "../components/Sort";
 import Skeleton from "../common/Skeleton";
 import {IPizza} from "../models/IPizza";
 import PizzaBlock from "../components/PizzaBlock";
 import axios from "axios";
 import Pagination from "../components/Pagination";
 import {SearchContext} from "../App";
+import qs from 'qs';
 import {useAppDispatch, useAppSelector} from "../hook/redux";
-import {setCategoryId, setSortType} from "../redux/reducer/filterSlice";
+import {setCategoryId, setCurrentPage, setSortType, setFilters} from "../redux/reducer/filterSlice";
+import {useNavigate} from "react-router-dom";
 
 
 interface ISort {
@@ -17,15 +19,35 @@ interface ISort {
 }
 
 
+
 const Home = () => {
-    const {categoryId, sortType} = useAppSelector(state => state.filter)
+    const {categoryId, sortType, currentPage} = useAppSelector(state => state.filter)
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
+    const isSearch = useRef(false)
+    const isMounted = useRef(false)
 
     const [pizzas, setPizzas] = useState([])
     const [loading, setLoading] = useState(true)
-    const [currentPage, setCurrentPage] = useState(1)
 
     const {searchValue} = useContext(SearchContext)
+
+    // Парсит url и достает от туда объекты которые передает в redux для загрузки нужных данных
+    useEffect(() => {
+        if (window.location.search) {
+            const params = qs.parse(window.location.search.substring(1))
+
+            const sort = category.find(item => item.sort === params.sortProperty)
+
+            dispatch(setFilters({
+                ...params,
+                sortProperty: sort
+            }))
+
+            isSearch.current = true
+        }
+    }, [])
 
     useEffect(() => {
         const getPizzas = async () => {
@@ -44,17 +66,39 @@ const Home = () => {
             setLoading(false)
         }
 
-        getPizzas()
+        if (!isSearch.current) {
+            getPizzas()
+        }
+
+        isSearch.current = false
+
+    }, [categoryId, sortType, searchValue, currentPage])
+
+
+    // Записывает данные из state в url строку
+    useEffect(() => {
+        if (isMounted.current) {
+            const queryString = qs.stringify({
+                sortProperty: sortType.sort,
+                categoryId,
+                currentPage: currentPage
+            })
+
+            navigate(`?${queryString}`)
+        }
+
+        isMounted.current = true
+
     }, [categoryId, sortType, searchValue, currentPage])
 
 
     const onClickCategory = (id: number) => {
-        setCurrentPage(1)
+        dispatch(setCurrentPage(1))
         dispatch(setCategoryId(id))
     }
 
     const onChangeSort = (sortType: ISort) => {
-        setCurrentPage(1)
+        dispatch(setCurrentPage(1))
         dispatch(setSortType(sortType))
     }
 
@@ -64,6 +108,7 @@ const Home = () => {
         .map((pizza: IPizza) => (
         <PizzaBlock
             key={pizza.id}
+            id={pizza.id}
             imageUrl={pizza.imageUrl}
             title={pizza.title}
             price={pizza.price}
@@ -88,7 +133,7 @@ const Home = () => {
                     loading ? skeletonList : pizzasList
                 }
             </div>
-            <Pagination onChangePage={(number: number) => setCurrentPage(number)} />
+            <Pagination onChangePage={(number: number) => dispatch(setCurrentPage(number))} />
         </div>
     );
 };

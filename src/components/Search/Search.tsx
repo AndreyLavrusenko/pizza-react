@@ -6,7 +6,7 @@ import styles from './search.module.scss'
 
 
 const Search = () => {
-    const {setSearchValue, searchValue} = useContext(SearchContext)
+    const {setSearchValue} = useContext(SearchContext)
     const [value, setValue] = useState('')
     const inputRef = useRef() as MutableRefObject<HTMLInputElement>
 

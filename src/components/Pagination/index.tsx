@@ -10,7 +10,7 @@ const Pagination = ({onChangePage}: IProps) => {
     return (
         <ReactPaginate
             className={styles.root}
-            breakLabel="..."
+            breakLabel="..." 
             nextLabel=">"
             onPageChange={(e) => onChangePage(e.selected + 1)}
             pageRangeDisplayed={4}

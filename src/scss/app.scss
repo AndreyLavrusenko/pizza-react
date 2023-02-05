@@ -316,13 +316,14 @@ body {
   }
 
   &--empty {
-    margin: 0 auto;
-    width: 560px;
+    margin: 60px auto;
+    width: 620px;
     text-align: center;
 
     h2 {
-      font-size: 32px;
-      margin-bottom: 10px;
+      font-size: 36px;
+      margin-bottom: 15px;
+      font-weight: 700;
     }
 
     p {
@@ -332,9 +333,10 @@ body {
       color: #777777;
     }
 
-    icon {
+    span {
       position: relative;
       top: 2px;
+      left: 5px;
     }
 
     img {

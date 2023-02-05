@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 interface ISort {
     name: string,
@@ -10,15 +10,28 @@ interface IProps {
     onChangeSort: (obj: ISort) => void
 }
 
+export const category: ISort[] = [
+    {name: 'популярности', sort: 'rating'},
+    {name: 'цене', sort: 'price'},
+    {name: 'алфавиту', sort: 'title'},
+]
+
 const Sort = ({value, onChangeSort}: IProps) => {
     const [popup, setPopup] = useState(false)
 
-    const category: ISort[] = [
-        {name: 'популярности', sort: 'rating'},
-        {name: 'цене', sort: 'price'},
-        {name: 'алфавиту', sort: 'title'},
-    ]
+    const sortRef = useRef(null)
 
+    // Скрывает окошко по клику вне этого окна
+    useEffect(() => {
+        const handleClickOutside = (event: any) => {
+            let path = event.composedPath().includes(sortRef.current);
+            if (!path) setPopup(false);
+        };
+
+        document.body.addEventListener('click', handleClickOutside);
+
+        return () => document.body.removeEventListener('click', handleClickOutside);
+    }, [])
 
     const changeCategoryHandler = (obj: ISort) => {
         onChangeSort(obj)
@@ -26,7 +39,7 @@ const Sort = ({value, onChangeSort}: IProps) => {
     }
 
     return (
-        <div className="sort">
+        <div className="sort" ref={sortRef}>
             <div className="sort__label" onClick={() => setPopup(prev => !prev)}>
                 <svg
                     width="10"
